@@ -89,3 +89,4 @@ class Images(object):
 Images.getImages(dir)
 Images.compareImages()
 Images.tidyImages()
+#test
