@@ -16,6 +16,7 @@ class Images(object):
         self.id = name
         #self.hash_avg = imagehash.average_hash(PIL.Image.open(r'%s\%s' %(dir,self.id) ))
         self.hash_p = imagehash.phash(PIL.Image.open((r'%s\%s' %(dir,self.id))))
+        self.hash_d = imagehash.dhash(PIL.Image.open((r'%s\%s' %(dir,self.id))))
         self.sim_img = []
         Images.instances.append(self)
 
@@ -44,8 +45,9 @@ class Images(object):
         print('Comparing images...')
         for i in range(len(Images.instances)):
             for x in range(i+1,len(Images.instances)):
-                dif = Images.instances[i].hash_p - Images.instances[x].hash_p
-                if dif == 0:
+                dif_p = Images.instances[i].hash_p - Images.instances[x].hash_p
+                dif_d = Images.instances[i].hash_d - Images.instances[x].hash_d
+                if (dif_p == 0) and (dif_d == 0):
                     Images.instances[i].sim_img.append(Images.instances[x])
                     Images.instances[x].sim_img.append(Images.instances[i])
                     pairs +=1
@@ -72,7 +74,7 @@ class Images(object):
                 for comp in img.sim_img:
                     if os.path.exists(r'%s\%s' %(dir,comp.id)):
                         if info:
-                            print('%s (HASH_AVG:%s) and %s (HASH_AVG:%s)' %(img.id, img.hash_p, comp.id, comp.hash_p))
+                            print('%s (HASH_D:%s, HASH_P:%s) and %s (HASH_D:%s, HASH_P:%s) ' %(img.id, img.hash_d, img.hash_p, comp.id, comp.hash_d, comp.hash_p))
                         img1 = pyplot.imread(r'%s\%s' %(dir,img.id))
                         img2 = pyplot.imread(r'%s\%s' %(dir,comp.id))
                         fig = pyplot.figure()
