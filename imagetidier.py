@@ -14,7 +14,8 @@ class Images(object):
 
     def __init__(self, name):
         self.id = name
-        self.hash = imagehash.average_hash(PIL.Image.open(r'%s\%s' %(dir,self.id) ))
+        #self.hash_avg = imagehash.average_hash(PIL.Image.open(r'%s\%s' %(dir,self.id) ))
+        self.hash_p = imagehash.phash(PIL.Image.open((r'%s\%s' %(dir,self.id))))
         self.sim_img = []
         Images.instances.append(self)
 
@@ -43,7 +44,7 @@ class Images(object):
         print('Comparing images...')
         for i in range(len(Images.instances)):
             for x in range(i+1,len(Images.instances)):
-                dif = Images.instances[i].hash - Images.instances[x].hash
+                dif = Images.instances[i].hash_p - Images.instances[x].hash_p
                 if dif == 0:
                     Images.instances[i].sim_img.append(Images.instances[x])
                     Images.instances[x].sim_img.append(Images.instances[i])
@@ -70,6 +71,8 @@ class Images(object):
             if len(img.sim_img) > 0:
                 for comp in img.sim_img:
                     if os.path.exists(r'%s\%s' %(dir,comp.id)):
+                        if info:
+                            print('%s (HASH_AVG:%s) and %s (HASH_AVG:%s)' %(img.id, img.hash_p, comp.id, comp.hash_p))
                         img1 = pyplot.imread(r'%s\%s' %(dir,img.id))
                         img2 = pyplot.imread(r'%s\%s' %(dir,comp.id))
                         fig = pyplot.figure()
