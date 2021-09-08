@@ -54,7 +54,7 @@ class Images(object):
                 print('%s has %s similar' %(img.id,len(img.sim_img)))
 
     @classmethod
-    def tidyImages(self):
+    def tidyImages(self,info): #SET INFO TO TRUE IF IMAGE INFORMATION SHOULD BE PRINTED WITH EACH COMPARISON
         def deleteImage(response):
             print(response)
             if response.upper() == 'Y':
@@ -88,5 +88,4 @@ class Images(object):
 
 Images.getImages(dir)
 Images.compareImages()
-Images.tidyImages()
-#test
+Images.tidyImages(True)
